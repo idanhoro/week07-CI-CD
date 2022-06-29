@@ -1,0 +1,41 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: "production"
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '14.x'
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'tar'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tar'
+    replaceExistingArchive: true
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tar'
+    artifact: 'weight-tracker-app-artifact'
+    publishLocation: 'pipeline'
+- task: UniversalPackages@0
+  inputs:
+    command: 'publish'
+    publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tar'
+    feedsToUsePublish: 'internal'
+    vstsFeedPublish: '7c53a0a0-93dd-44c3-bcc1-42662962cc28'
+    vstsFeedPackagePublish: 'weight-tracker-app-artifact'
+    versionOption: 'patch'
+    packagePublishDescription: 'publish to Azure Artifacts'
