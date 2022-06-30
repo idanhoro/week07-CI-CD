@@ -5,7 +5,7 @@
 #
 
 trigger:
-- azure-pipeline
+- main
 
 pool:
   name: "CD-agent"
