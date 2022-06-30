@@ -8,7 +8,7 @@ trigger:
 - azure-pipeline
 
 pool:
-  name: "CI-agent"
+  name: "CD-agent"
 steps:
 - task: NodeTool@0
   inputs:
